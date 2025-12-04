@@ -18,11 +18,6 @@ type Who = {
 const Who = () => {
    
 
-    
-
-    const [selected, setSelected] = useState<number | null>(null);
-
-
 
   const [active, setActive] = useState<number | null>(null);
 
@@ -102,7 +97,7 @@ type CardProps = {
 
 
 
-function DefaultContent({ id, isActive = false, bf = '', ba = '',name }: CardProps) {
+function DefaultContent({ isActive = false, bf = '', ba = '',name }: CardProps) {
   const [hovered, setHovered] = useState(false);
 
   const bgUrl = isActive ? ba : (hovered ? ba : bf);

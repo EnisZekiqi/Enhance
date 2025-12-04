@@ -1,9 +1,8 @@
 'use client'
 
 import { motion, useTransform, useScroll } from "motion/react";
-import { useRef ,useEffect} from "react";
+import { useRef } from "react";
 import Navbar from "../Components/Navbar";
-import Link from "next/link";
 import TransitionLink from "../Components/TransitionLink";
 
 type Card = {
@@ -93,11 +92,6 @@ const sectionRef = useRef<HTMLElement | null>(null);
   const lineTransform = useTransform(scrollYProgress, v => `scaleY(${v})`);
 
   // Debug: print progress to console while developing
-
-const childVariants = {
-  hidden:{opacity:0,x:-10},
-  animate:{opacity:1,x:0,transition:{duration:0.3}}
-}
 
   return(
     <>

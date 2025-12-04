@@ -1,6 +1,5 @@
 'use client'
 import { useParams } from "next/navigation";
-import { useContext } from "react";
 import { motion } from "motion/react";
 
 const DetailEvents = () => {

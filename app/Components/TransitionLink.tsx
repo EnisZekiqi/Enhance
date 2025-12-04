@@ -1,52 +1,50 @@
 'use client'
 import Link, { LinkProps } from "next/link";
 import { ReactNode } from "react";
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation";
 
-import { usePathname } from "next/navigation";
-
-interface TransitionLinkProps extends LinkProps{
-    children:ReactNode,
-    href:string
+interface TransitionLinkProps extends LinkProps {
+  children: ReactNode;
+  href: string;
+  className?: string;
 }
 
-
-function sleep(ms:number):Promise<void> {
-    return new Promise((resolve) =>setTimeout(resolve,ms))
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
-export default function TransitionLink({ children, href, ...props }: TransitionLinkProps) {
 
+export default function TransitionLink({
+  children,
+  href,
+  className,
+  ...props
+}: TransitionLinkProps) {
   const router = useRouter();
-
   const pathname = usePathname();
-
 
   const transitionClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
 
-    // Prevent pushing same route
     if (pathname === href) return;
 
-
-    const body = document.body;
-    body.classList.add("page-transition");
+    document.body.classList.add("page-transition");
 
     await sleep(400);
     router.push(href);
 
-    // optional cleanup after navigation
     setTimeout(() => {
-      body.classList.remove("page-transition");
+      document.body.classList.remove("page-transition");
     }, 400);
   };
 
-    
-console.log('this is : ',href)
-
-    return (
-        
-        <Link href={href} onClick={transitionClick} {...props}>{children}</Link> 
-    
-    );
+  return (
+    <Link
+      href={href}
+      onClick={transitionClick}
+      className={className}   // 👈 FIX: apply it here
+      {...props}
+    >
+      {children}
+    </Link>
+  );
 }
- 
