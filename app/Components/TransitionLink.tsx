@@ -2,8 +2,7 @@
 import Link, { LinkProps } from "next/link";
 import { ReactNode } from "react";
 import { useRouter } from "next/navigation"
-import { useContext } from "react";
-import { LanguageContext } from "../context/LanguageContext";
+
 import { usePathname } from "next/navigation";
 
 interface TransitionLinkProps extends LinkProps{

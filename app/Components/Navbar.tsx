@@ -1,6 +1,5 @@
 'use client'
 import Image from "next/image";
-import Link from "next/link";
 import { useState,useContext,useEffect } from "react";
 import { LanguageContext } from "../context/LanguageContext";
 import { usePathname } from "next/navigation";
@@ -35,7 +34,7 @@ const Navbar = () => {
   const {clicked}=userContext
 
   const switchLanguage =(name:string)=>{
-  setUser((prev : any) => (prev === name ? 'english' : name))
+  setUser((prev : string) => (prev === name ? 'english' : name))
   }
 
   const [modal,setModal]=useState(false)

@@ -11,7 +11,7 @@ type Card = {
   titlefr:string,
   id:number,
   description:string,
-  date:number,
+  date:string,
   descriptionfr:string,
   img:string
 }

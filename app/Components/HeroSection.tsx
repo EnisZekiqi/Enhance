@@ -3,7 +3,6 @@ import { motion,AnimatePresence } from "motion/react";
 import Navbar from "./Navbar";
 import { useContext,useState,useEffect } from "react";
 import { LanguageContext } from "../context/LanguageContext";
-import Link from "next/link";
 import TransitionLink from "./TransitionLink";
 import Image from "next/image";
 const HeroSection = () => {
@@ -12,7 +11,7 @@ const HeroSection = () => {
 
     if (!userContext) throw new Error("useContext must be used within a UserProvider");
 
-      const { user, setUser } = userContext;
+      const { user } = userContext;
 
 
 
@@ -27,7 +26,6 @@ const HeroSection = () => {
 ]
 
 const [motionLength,setMotionLength]=useState(true)
-const [event,setEvent]=useState('')
   useEffect(() => {
       // Automatically hide the intro after 5 seconds
       const timer = setTimeout(() => {
@@ -73,7 +71,7 @@ const [event,setEvent]=useState('')
     return ( 
         <section
     
-        className="h-full p-0 md:p-8 flex flex-col items-center justify-between w-full">
+        className="h-full p-0 pb-8 md:p-8 flex flex-col items-center justify-between w-full">
            
         <Navbar/>
         <motion.div
