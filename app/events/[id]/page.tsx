@@ -29,14 +29,14 @@ const date = new Date();
     }
 
     return (
-        <motion.div className="p-8 text-white flex items-start gap-4 mt-8">
+        <motion.div className="p-8 text-white flex flex-col sm:flex-row items-start gap-4 mt-8">
           <img src={card.img} alt={card.title} className="mt- w-full max-w-2xl rounded-lg" />
         <div className="flex flex-col items-start">
           <p className="mb-4 text-sm font-light text-white/70">{card.date}</p>
-            <h1 className="text-4xl font-medium">{card.title}</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-medium">{card.title}</h1>
           
          
-          <p className="mt-8 text-lg font-normal text-white/90">{card.description}</p>
+          <p className="mt-8 text-md sm:text-lg font-normal text-white/90">{card.description}</p>
         </div>
         </motion.div>
     );
