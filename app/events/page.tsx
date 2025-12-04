@@ -80,7 +80,7 @@ const StraightLine = ()=>{
 
 const MobileEvent = ()=>{
 
-const sectionRef = useRef<HTMLElement | null>(null);
+const sectionRef = useRef<HTMLDivElement | null>(null);
 
   // When the section top enters the bottom of the viewport -> 0
   // When the section bottom reaches the top of the viewport -> 1
