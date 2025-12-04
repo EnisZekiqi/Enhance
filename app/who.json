@@ -1,0 +1,81 @@
+{
+    "cards": [
+        {
+            "id": 1,
+            "name": "Alice Johnson",
+            "describe": "Creative professional with passion for design",
+            "job": "UI/UX Designer",
+            "info": "5 years of experience in digital design",
+            "background": {
+                "before": "https://plus.unsplash.com/premium_photo-1763466939750-dd241453e2cd?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "after": "https://plus.unsplash.com/premium_photo-1763466939994-be797ca6126c?w=200&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1pbi1zYW1lLXNlcmllc3wyfHx8ZW58MHx8fHx8"
+            }
+        },
+        {
+            "id": 2,
+            "name": "Bob Smith",
+            "describe": "Full-stack developer and tech enthusiast",
+            "job": "Senior Developer",
+            "info": "8 years building scalable applications",
+            "background": {
+                "before": "https://images.unsplash.com/photo-1763162944506-ee1fbaf5a733?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "after": "https://images.unsplash.com/photo-1704004933290-2360e043da1f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fHw%3D"
+            }
+        },
+        {
+            "id": 3,
+            "name": "Carol Davis",
+            "describe": "Data analyst with strong problem-solving skills",
+            "job": "Data Analyst",
+            "info": "6 years in business intelligence",
+            "background": {
+                "before": "https://images.unsplash.com/photo-1764782979306-1e489462d895?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8",
+                "after": "https://media.istockphoto.com/id/1296222438/photo/new-york-skyline-sunset-moody.webp?a=1&s=612x612&w=0&k=20&c=XZMIFPYMj6c4g-uwjskn0lzSOLuplxlSHNECcnvoFko="
+            }
+        },
+        {
+            "id": 4,
+            "name": "David Wilson",
+            "describe": "Product manager focused on user experience",
+            "job": "Product Manager",
+            "info": "7 years managing digital products",
+            "background": {
+                "before": "https://images.unsplash.com/photo-1764712754791-8627ebded3f6?q=80&w=390&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                "after": "https://images.unsplash.com/photo-1728774270178-01e3aef8b95b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fHw%3D"
+            }
+        },
+        {
+            "id": 5,
+            "name": "Emma Brown",
+            "describe": "DevOps engineer optimizing cloud infrastructure",
+            "job": "DevOps Engineer",
+            "info": "5 years in cloud architecture and deployment",
+            "background": {
+                "before": "https://images.unsplash.com/photo-1764418658602-c1dbe7a39c6e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyM3x8fGVufDB8fHx8fA%3D%3D",
+                "after": "https://images.unsplash.com/photo-1764418658602-c1dbe7a39c6e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyM3x8fGVufDB8fHx8fA%3D%3D"
+            }
+        },
+        {
+            "id": 6,
+            "name": "Frank Miller",
+            "describe": "QA specialist ensuring software quality",
+            "job": "QA Lead",
+            "info": "6 years in quality assurance and testing",
+            "background": {
+                "before": "https://images.unsplash.com/photo-1764520236404-217bf3300ee4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D",
+                "after": "https://images.unsplash.com/photo-1764520236404-217bf3300ee4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D"
+            }
+        },
+        {
+            "id": 7,
+            "name": "Grace Lee",
+            "describe": "Security expert protecting digital assets",
+            "job": "Security Engineer",
+            "info": "9 years in cybersecurity and compliance",
+            "background": {
+                "before": "https://images.unsplash.com/photo-1764760764956-fcb78be107a5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
+                "after": "https://images.unsplash.com/photo-1764760764956-fcb78be107a5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D"
+            }
+        }
+    ]
+}
