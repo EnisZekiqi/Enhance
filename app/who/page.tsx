@@ -107,7 +107,7 @@ function DefaultContent({ isActive = false, bf = '', ba = '',name }: CardProps) 
     <p
       className={`
              opacity-100
-              ${activeHover ? 'grayscale-[0%] brightness-[100%] contrast-[100%]':'grayscale-[60%] brightness-[85%] contrast-[85%]'} group-hover:brightness-100 group-hover:contrast-100 w-[330px] h-[350px]  rounded-lg p-2 transition-all duration-200 bg-cover bg-center`}
+              ${activeHover ? 'grayscale-[0%] brightness-[100%] contrast-[100%]':'grayscale-[60%] brightness-[85%] contrast-[85%]'} group-hover:brightness-100 group-hover:contrast-100 w-[310px] h-[330px] sm:w-[330px] sm:h-[350px]  rounded-lg p-2 transition-all duration-200 bg-cover bg-center`}
       style={{ backgroundImage: `url(${bgUrl})` }}
       onMouseEnter={()=>setHovered(true)}
       onMouseLeave={() => setHovered(false)}

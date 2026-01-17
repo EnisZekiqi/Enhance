@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import TransitionLink from "./TransitionLink";
 import { motion,AnimatePresence } from "motion/react";
 import React from "react";
-import {Menu,X} from 'lucide-react'
+import {Menu,X,ShieldUser} from 'lucide-react'
+import Link from "next/link";
 const Navbar = () => {
 
   const navbar = [
@@ -52,7 +53,7 @@ const Navbar = () => {
   return ( 
     <section className="flex items-center justify-between  w-full py-5 px-5">
       <motion.div layoutId="main-logo">
-  <Image alt="logo" src="/vercel.svg" width={50} height={40}/>
+  <Image alt="logo" src="/neov2.png" width={80} height={80}/>
 </motion.div>
 
      {!isHome && 
@@ -67,7 +68,8 @@ const Navbar = () => {
       </div>
      }
      <button className="block md:hidden cursor-pointer" onClick={()=>setModal((prev)=>!prev)}><Menu/></button>
-     <label className="hidden md:block toggle-switch">
+<div className="hidden sm:flex items-center gap-2">
+       <label className="hidden md:block toggle-switch">
   <input 
   type="checkbox"
   checked={user === "french"}
@@ -79,6 +81,8 @@ const Navbar = () => {
   <div className="toggle-switch-handle"></div>
   </div>
 </label>
+<span className=""><Link href={`/admin/login`} className="flex flex-row-reverse items-center gap-2"><ShieldUser color="#ffffffc5" size={30}/></Link></span>
+</div>
    <AnimatePresence>
    {modal  && 
   <>
@@ -136,6 +140,7 @@ const Navbar = () => {
   <div className="toggle-switch-handle"></div>
   </div>
 </label>
+<Link href={`/admin/login`} className="flex flex-row-reverse items-center gap-2"> <p>Admin</p><ShieldUser color="white" size={30}/></Link>
   </motion.div>
   </>
   }

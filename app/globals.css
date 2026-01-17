@@ -55,6 +55,7 @@ body {
   gap: 25px;
   grid-template-columns: repeat(4, 350px);
   padding: 10px;
+  justify-items: center;
 }
 @media (max-width:1024px) {
   .grid2{
@@ -80,9 +81,17 @@ body {
   cursor: pointer;
 
 }
+.input {
+  @apply p-2 rounded-md bg-[#343434] text-white focus:outline-yellow-300;
+}
 
 .card.active {
   grid-column: span 2;
+}
+@media (max-width:404px) {
+  .card{
+    padding: 8px;
+  }
 }
 
 @media (max-width:404px) {
@@ -261,4 +270,50 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: white;
+  --_m: 
+    conic-gradient(#0000 10%,#000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {to{transform: rotate(1turn)}}
+
+.loader2 {
+  width: 30px;
+  padding: 6px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: black;
+  --_m: 
+    conic-gradient(#0000 10%,#000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: l32 1s infinite linear;
+}
+@keyframes l32 {to{transform: rotate(1turn)}}
+
+/* Example for top row */
+.timeline-line {
+  position: absolute;
+  width: 2px;
+  height: calc(18vh); /* adjust to visually connect */
+  top: 100%; /* start at bottom of card */
+  left: 50%; /* horizontal center of card */
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.2);
 }

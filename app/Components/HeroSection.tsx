@@ -17,7 +17,7 @@ const HeroSection = () => {
 
       const navigate = [
     {id:1,title:'Who',titlefr:'Oms',link:'/who',img:'https://media.istockphoto.com/id/2187983015/photo/grainy-dark-gradient-carbon-gray-blurred-abstract-noise-texture-black-monochrome-plain.webp?a=1&b=1&s=612x612&w=0&k=20&c=apgvMeLaD4r0qoxkAud1y8vFiscdRiWlH2sBYEGy3D8='}
-    ,{id:2,title:'What',titlefr:'Quoi',link:'',img:'https://plus.unsplash.com/premium_photo-1728499754017-d4ad4bf54c32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGJsYWNrJTIwYW5kJTIwd2hpdGV8ZW58MHx8MHx8fDA%3D'}
+    ,{id:2,title:'What',titlefr:'Quoi',link:'/what',img:'https://plus.unsplash.com/premium_photo-1728499754017-d4ad4bf54c32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGJsYWNrJTIwYW5kJTIwd2hpdGV8ZW58MHx8MHx8fDA%3D'}
     ,{id:3,title:'Neomag',titlefr:'Neomag',link:'',img:'https://plus.unsplash.com/premium_photo-1728499754017-d4ad4bf54c32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGJsYWNrJTIwYW5kJTIwd2hpdGV8ZW58MHx8MHx8fDA%3D'}
     ,{id:4,title:'Events',titlefr:'événements',link:'/events',img:'https://images.unsplash.com/photo-1762545611539-df4e46e7747e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyNHx8fGVufDB8fHx8fA%3D%3D'},
     {id:5,title:'Where',titlefr:'Où',link:'',img:'https://plus.unsplash.com/premium_photo-1728499754017-d4ad4bf54c32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGJsYWNrJTIwYW5kJTIwd2hpdGV8ZW58MHx8MHx8fDA%3D'},
@@ -25,15 +25,21 @@ const HeroSection = () => {
     {id:7,title:'Partners',titlefr:'Partenaires',link:'',img:'https://plus.unsplash.com/premium_photo-1728499754017-d4ad4bf54c32?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGJsYWNrJTIwYW5kJTIwd2hpdGV8ZW58MHx8MHx8fDA%3D'}
 ]
 
-const [motionLength,setMotionLength]=useState(true)
+const [motionLength,setMotionLength]=useState('neo1')
   useEffect(() => {
-      // Automatically hide the intro after 5 seconds
-      const timer = setTimeout(() => {
-        setMotionLength(false);
-      }, 5000);
-  return () => {
+      if (motionLength === 'neo1') {
+        const timer = setTimeout(() => {
+        setMotionLength('neo2');
+      }, 3000);
+      return () => {
         clearTimeout(timer);}
-  },[])
+      }
+      const timer2 = setTimeout(() => {
+        setMotionLength('');
+      }, 3000);
+  return () => {
+        clearTimeout(timer2);}
+  },[motionLength])
 
 
  if (motionLength) {
@@ -43,21 +49,29 @@ const [motionLength,setMotionLength]=useState(true)
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <motion.div
+    <AnimatePresence mode="wait">
+       {motionLength === 'neo1' ?
+       <motion.div
       initial={{opacity:0}}
       animate={{opacity:1,transition:{duration:0.5,delay:1}}}
+      exit={{opacity:0,transition:{duration:0.5}}}
       layoutId="main-logo">
-        <Image alt="logo" src="/vercel.svg" width={150} height={120}/>
-      </motion.div>
+        <Image alt="logo" src="/neo.png" width={200} height={150}/>
+      </motion.div> 
+      
+      :
 
-      <motion.h1
-        className="text-4xl mt-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-      >
-        Neobuild
-      </motion.h1>
+       <motion.div
+       key={motionLength === 'neo2'}
+      initial={{opacity:0}}
+      animate={{opacity:1,transition:{duration:0.5,delay:1}}}
+      exit={{opacity:0,transition:{duration:0.5}}}
+      layoutId="main-logo">
+        <Image alt="logo" src="/neov2.png" width={200} height={150}/>
+      </motion.div>
+      }
+    </AnimatePresence>
+     
     </motion.div>
   );
 }
@@ -78,7 +92,7 @@ const [motionLength,setMotionLength]=useState(true)
         initial={{opacity:0,y:'40px',filter:'blur(12px)'}}
         animate={{opacity:1,y:'0px',filter:'blur(0px)'}}
         transition={{duration:0.5}}
-        className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-center  gap-5 mt-10">
+        className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-center  gap-5 mt-0">
            {navigate.map((items)=>(
          <TransitionLink  
          href={items.link}
