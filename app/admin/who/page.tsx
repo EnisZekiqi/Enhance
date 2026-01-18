@@ -42,7 +42,7 @@ const WhoEdit = () => {
     }, [18000])
     
     
-    const clickEdit = (user:any)=>{
+    const clickEdit = (user:Users)=>{
         setShowEdit(user.id)
         setFormData({email:user.email,first:user.first,last:user.last,dobDay:user.dobDay,dobMonth:user.dobMonth,dobYear:user.dobYear,gender:user.gender,password:user.password})
     }

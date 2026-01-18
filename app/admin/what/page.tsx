@@ -62,7 +62,7 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
     
     console.log(users)
     
-    const clickEdit = (user: any) => {
+    const clickEdit = (user: Users) => {
         setShowEdit(user.id);
         setFormData({
             name: user.name,

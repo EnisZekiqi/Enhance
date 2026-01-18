@@ -1,10 +1,9 @@
 'use client'
 
-import { motion, useTransform, useScroll } from "motion/react";
+import { motion, useTransform, useScroll,motionValue } from "motion/react";
 import { useRef, useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import TransitionLink from "../Components/TransitionLink";
-import { time } from "console";
 
 type Card = {
   title:string,
