@@ -95,6 +95,14 @@
       "describe": "Speed improvements and bug fixes",
       "img": "https://via.placeholder.com/150",
       "column": 2
+    },
+    {
+      "id": 13,
+      "date": "15/07/2025",
+      "title": "Performance Optimization",
+      "describe": "Speed improvements and bug fixes",
+      "img": "https://via.placeholder.com/150",
+      "column": 2
     }
   ]
 }

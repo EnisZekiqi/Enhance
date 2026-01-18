@@ -169,39 +169,53 @@ const EventEdit = () => {
         </motion.div>
       </AnimatePresence>
 
-      <div className="h-15 sm:h-25"></div>
+      <div className="h-15 sm:h-15"></div>
 
       <div className="grid grid-cols-1 md:grid-cols-[260px_1fr_280px] gap-12 sm:gap-6 w-full p-3 sm:pl-6">
 
         {/* LEFT – Events list */}
-        <aside className={` border-0 sm:border-r ${events.length === 0 ? 'flex overflow-y-auto flex-col justify-between' : ''} border-[#343434] pr-4`}>
-          <div>
-            <h1 className="text-white text-xl sm:text-2xl font-medium mb-2">Current Events</h1>
-            <p className="text-white/70 text-xs mt-2 mb-4">Click on an event to edit it</p>
-          </div>
+      <aside className="border-0 sm:border-r border-[#343434] pr-4 h-[95vh] flex flex-col">
+  {/* Header */}
+  <div>
+    <h1 className="text-white text-xl sm:text-2xl font-medium mb-2">Current Events</h1>
+    <p className="text-white/70 text-xs mt-2 mb-4">Click on an event to edit it</p>
+  </div>
 
-          {events.length === 0 ?
-            <div className="flex flex-col items-center mt-10 h-full justify-center">
-              <CircleOff color="white" size={35} />
-              <h1 className="text-white/80 font-medium text-md mt-4">No Events Added</h1>
-            </div> :
-            events.map((event) => (
-              <div
-                key={event.id}
-                onClick={() => clickEdit(event)}
-                className={`p-1.5 rounded-md ${showEdit === event.id ? 'bg-white/10 ' : 'hover:bg-white/5'} mt-2 group hover:bg-white/5 flex items-center justify-between w-full cursor-pointer transition-all duration-300`}
-              >
-                {event.title}
-                <button type="button" onClick={(e) => {
-                  e.stopPropagation()
-                  setShowEdit(event.id)
-                  setModal(true)
-                }} className="rounded-lg p-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-500 cursor-pointer bg-red-400 border border-red-900">
-                  <Trash color='#8C2123' />
-                </button>
-              </div>
-            ))}
-        </aside>
+  {/* Scrollable Events List */}
+  <div className="list mask-b-from-90% mask-b-to-100% relative flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-yellow-300 scrollbar-track-transparent ">
+
+    {events.length === 0 ? (
+      <div className="flex flex-col items-center mt-10 justify-center h-full">
+        <CircleOff color="white" size={35} />
+        <h1 className="text-white/80 font-medium text-md mt-4">No Events Added</h1>
+      </div>
+    ) : (
+      events.map((event) => (
+        <div
+          key={event.id}
+          onClick={() => clickEdit(event)}
+          className={`p-1.5 rounded-md ${
+            showEdit === event.id ? "bg-white/10 " : "hover:bg-white/5"
+          } mt-2 group hover:bg-white/5 flex items-center justify-between w-full cursor-pointer transition-all duration-300`}
+        >
+          {event.title}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowEdit(event.id);
+              setModal(true);
+            }}
+            className="rounded-lg p-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-500 cursor-pointer bg-red-400 border border-red-900"
+          >
+            <Trash color="#8C2123" />
+          </button>
+        </div>
+      ))
+    )}
+  </div>
+</aside>
+
 
         {/* RIGHT – Event form */}
         <form className="flex flex-col pl-0 sm:pl-6 gap-6 w-full sm:max-w-2xl">
@@ -332,7 +346,7 @@ const EventEdit = () => {
 }
 
 // Confirm modal
-export const ConfirmModal = ({
+ const ConfirmModal = ({
   modal,
   setModal,
   onConfirm,

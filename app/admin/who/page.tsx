@@ -299,7 +299,7 @@ if (loadingState) {
      );
 }
 
-export const ConfirmModal = ({
+ const ConfirmModal = ({
   modal,
   setModal,
   onConfirm,
