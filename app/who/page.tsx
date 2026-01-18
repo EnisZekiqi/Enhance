@@ -1,5 +1,5 @@
 'use client'
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import Navbar from "../Components/Navbar";
 import who from '@/app/who.json'

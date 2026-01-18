@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useTransform, useScroll,motionValue } from "motion/react";
+import { motion, useTransform, useScroll,MotionValue } from "motion/react";
 import { useRef, useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
 import TransitionLink from "../Components/TransitionLink";
@@ -121,7 +121,7 @@ const StraightLine = ({
   scrollX,
 }: {
   cards: Card[];
-  scrollX: any;
+   scrollX: MotionValue<string>;
 }) => {
   const [alignedDate, setAlignedDate] = useState("Today");
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -163,13 +163,7 @@ const StraightLine = ({
 }, [scrollX]);
 
 
- const today = new Date().toLocaleDateString("en-US");
 
-const workTodayDate = (date:string) => {
-  if (date === today) {
-    
-  }
-}
 
   return (
     <div className="relative w-full h-16">

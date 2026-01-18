@@ -8,7 +8,14 @@ import AdminNav from "@/app/Components/AminNav";
 import LogoutButton from "@/app/Components/LogoutButton";
 type Users = {
     id:number,
+    email:string,
     first:string
+    last:string,
+    dobDay:string,
+    dobMonth:string,
+    dobYear:string,
+    gender:string,
+    password:string
 }
 
 const WhoEdit = () => {

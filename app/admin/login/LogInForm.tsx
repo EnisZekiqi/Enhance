@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { Loader2,EyeClosed,Eye  } from "lucide-react";
 export default function LoginForm() {
   const router = useRouter();
 
@@ -10,7 +10,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [showPw,setShowPw]=useState(false)
   const isFormFilled = email.trim() !== "" && password.trim() !== "";
 
   async function handleSubmit(e: React.FormEvent) {
@@ -79,19 +79,36 @@ export default function LoginForm() {
 
           <div className="space-y-2">
             <label className="text-sm text-white/60">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-[#343434] bg-transparent p-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-300"
-            />
+            <div className="relative w-full">
+              <input
+                type={showPw ? 'text':'password'}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="w-full rounded-lg border border-[#343434] bg-transparent p-2 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              />
+
+              <button
+                type="button"
+                onClick={()=>setShowPw(prev => !prev)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition"
+              >
+                {showPw ? <Eye/>:<EyeClosed />}
+              </button>
+            </div>
+
           </div>
 
           <button
+          type="submit"
             disabled={!isFormFilled || loading}
-            className="w-full rounded-lg bg-yellow-300 cursor-pointer. py-2 font-medium text-black disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-lg bg-yellow-300 text-center cursor-pointer py-2 font-medium text-black disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Signing in..." : "Log in"}
+            {loading ?  
+            <span className="flex items-center justify-center gap-1">
+          <Loader2 size={18} className="animate-spin" />
+          Logging in...
+        </span>
+        : "Log in"}
           </button>
         </form>
       </div>
