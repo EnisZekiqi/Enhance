@@ -37,7 +37,7 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const [formData,setFormData]=useState(emptyForm)
     const [isSaving,setIsSaving]=useState(false)
-    const [showEdit,setShowEdit]=useState(null)
+    const [showEdit, setShowEdit] = useState<number | null>(null)
    const [modal,setModal]=useState(false)
 
 
@@ -411,7 +411,7 @@ export const ConfirmModal = ({
   return (
     <AnimatePresence mode="wait">
       <motion.div
-      key={modal === true}
+      key="modal"
     initial={{opacity:0,y:-10}}
     animate={{opacity:1,y:0}}
     exit={{opacity:0,y:-10}}

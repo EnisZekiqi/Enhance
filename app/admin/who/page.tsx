@@ -18,7 +18,7 @@ const WhoEdit = () => {
     const [IsFetching,setIsFetching]=useState(false)
     const [formData,setFormData]=useState({email:'',first:'',last:'',dobDay:'',dobMonth:'',dobYear:'',gender:'',password:''})
     const [isSaving,setIsSaving]=useState(false)
-    const [showEdit,setShowEdit]=useState(null)
+  const [showEdit, setShowEdit] = useState<number | null>(null)
    const [modal,setModal]=useState(false)
 
 
@@ -308,7 +308,7 @@ export const ConfirmModal = ({
   return (
     <AnimatePresence mode="wait">
       <motion.div
-      key={modal === true}
+      key="modal"
     initial={{opacity:0,y:-10}}
     animate={{opacity:1,y:0}}
     exit={{opacity:0,y:-10}}

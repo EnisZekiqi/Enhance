@@ -127,37 +127,41 @@ const StraightLine = ({
   const [alignedDate, setAlignedDate] = useState("Today");
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = scrollX.on("change", () => {
-      if (!containerRef.current) return;
+ useEffect(() => {
+  const unsubscribe = scrollX.on("change", () => {
+    if (!containerRef.current) return;
 
-      const items = containerRef.current.querySelectorAll("[data-date]");
-      const centerX = window.innerWidth / 2;
+    const items = Array.from(
+      containerRef.current.querySelectorAll("[data-date]")
+    ) as HTMLElement[];
 
-      let closest: HTMLElement | null = null;
-      let min = Infinity;
+    const centerX = window.innerWidth / 2;
 
-      items.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        const x = rect.left + rect.width / 2;
-        const d = Math.abs(x - centerX);
+    let closest: HTMLElement | null = null;
+    let min = Infinity;
 
-        if (d < min) {
-          min = d;
-          closest = el as HTMLElement;
-        }
-      });
+    for (const el of items) {
+      const rect = el.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const d = Math.abs(x - centerX);
 
-      if (closest) {
-        const date = closest.dataset.date!;
-        const today = new Date().toLocaleDateString("en-US");
-        const formatted = new Date(date).toLocaleDateString("en-US");
-        setAlignedDate(formatted === today ? "Today" : formatted);
+      if (d < min) {
+        min = d;
+        closest = el;
       }
-    });
+    }
 
-    return () => unsubscribe();
-  }, [scrollX]);
+    const date = closest?.dataset?.date;
+    if (!date) return;
+
+    const today = new Date().toLocaleDateString("en-US");
+    const formatted = new Date(date).toLocaleDateString("en-US");
+
+    setAlignedDate(formatted === today ? "Today" : formatted);
+  });
+
+  return () => unsubscribe();
+}, [scrollX]);
 
 
  const today = new Date().toLocaleDateString("en-US");
@@ -283,8 +287,8 @@ const TimelineCard = ({
   card: Card;
   cardRef?: (el: HTMLDivElement | null) => void;
 }) => (
-  <TransitionLink
-    ref={cardRef}
+  <div ref={cardRef}>
+    <TransitionLink
     href={`/events/${card.id}`}
     className="relative flex flex-col items-center group hover:drop-shadow-[0_0_10px_#A6A255] transition-all duration-300 gap-2 flex-shrink-0"
   >
@@ -303,6 +307,7 @@ const TimelineCard = ({
     <p className="text-white block sm:hidden z-100 text-xs  sm:text-sm line-clamp-2 w-[140px] text-end">{card.date}</p>
     <span className="timeline-line"></span>
   </TransitionLink>
+  </div>
 );
 
 const TimelineCard2 = ({ card }: { card: Card }) => (
