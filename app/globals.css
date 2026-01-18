@@ -52,7 +52,7 @@ body {
 
 .grid2 {
   display: grid;
-  gap: 25px;
+  gap: 20px;
   grid-template-columns: repeat(4, 350px);
   padding: 10px;
   justify-items: center;

@@ -33,7 +33,6 @@ const Navbar = () => {
 
   const { user, setUser } = userContext;
   const {clicked}=userContext
-
   const switchLanguage =(name:string)=>{
   setUser((prev : string) => (prev === name ? 'english' : name))
   }
@@ -59,8 +58,8 @@ const Navbar = () => {
      {!isHome && 
       <div className="hidden md:flex items-center gap-4 text-white">
       {navbar.map((items)=>(
-        <TransitionLink  key={items.id} href={items.link}>
-          <p className={`hover:text-amber-300 ${clicked === items.link ? 'text-amber-300':'text-white'} transition-all duration-300`}>
+        <TransitionLink   key={items.id} href={items.link}>
+          <p className={`hover:text-amber-300 ${route === items.link ? 'text-amber-300':'text-white'} transition-all duration-300`}>
             {items.title}
           </p>
         </TransitionLink>
