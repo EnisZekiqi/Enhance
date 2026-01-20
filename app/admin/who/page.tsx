@@ -6,24 +6,27 @@ import { useState,useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import AdminNav from "@/app/Components/AminNav";
 import LogoutButton from "@/app/Components/LogoutButton";
-type Users = {
-    id:number,
-    email:string,
-    first:string
-    last:string,
-    dobDay:string,
-    dobMonth:string,
-    dobYear:string,
-    gender:string,
-    password:string
+type Who = {
+  id: number
+  image:string,
+  name: string
+  title: string
+  description: string
+  created_at: string
 }
 
 const WhoEdit = () => {
     
  
-    const [users,setUsers]=useState([])
+    const [users, setUsers] = useState<Who[]>([])
     const [IsFetching,setIsFetching]=useState(false)
-    const [formData,setFormData]=useState({email:'',first:'',last:'',dobDay:'',dobMonth:'',dobYear:'',gender:'',password:''})
+    const [formData, setFormData] = useState({
+      name: "",
+      title: "",
+      description: ""
+    })
+    const [imageFile, setImageFile] = useState<File | null>(null)
+const [imagePreview, setImagePreview] = useState<string | null>(null)
     const [isSaving,setIsSaving]=useState(false)
   const [showEdit, setShowEdit] = useState<number | null>(null)
    const [modal,setModal]=useState(false)
@@ -33,7 +36,7 @@ const WhoEdit = () => {
     async function fetchUsers() {
          try {
       setIsFetching(true);
-      const res = await fetch("http://localhost:3002/inventory");
+      const res = await fetch("http://localhost:3010/who");
       const data = await res.json();
       setUsers(data);
     } catch (err) {
@@ -48,10 +51,15 @@ const WhoEdit = () => {
       fetchUsers()
     }, [18000])
     
+    const image = users.map((items)=>items.image)
     
-    const clickEdit = (user:Users)=>{
+    const clickEdit = (user:Who)=>{
         setShowEdit(user.id)
-        setFormData({email:user.email,first:user.first,last:user.last,dobDay:user.dobDay,dobMonth:user.dobMonth,dobYear:user.dobYear,gender:user.gender,password:user.password})
+        setFormData({name:user.name,title:user.title,description:user.description})
+        if (image) {
+          setImagePreview(`http://localhost:3010${user.image}`)
+        }
+        setImageFile(null)
     }
 
 
@@ -59,49 +67,58 @@ const WhoEdit = () => {
 
 const isFormFilled =()=>{
   return (
-    formData.email.trim() !== '' &&
-    formData.first.trim() !== '' &&
-    formData.last.trim() !== '' &&
-    formData.password.trim() !== '' &&
-    formData.gender.trim() !== '' &&
-    formData.dobDay !== null &&
-    formData.dobMonth !== '' &&
-    formData.dobYear !== null
-  );
+    formData.name.trim() !== '' &&
+    formData.title.trim() !== '' &&
+    formData.description.trim() !== '' 
+  )
 }
 console.log(isFormFilled())
 
  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    
-    if (!isFormFilled()) {
-        return
+  e.preventDefault()
+  if (!isFormFilled()) return
+
+  try {
+    setIsSaving(true)
+
+    const data = new FormData()
+    data.append("name", formData.name)
+    data.append("title", formData.title)
+    data.append("description", formData.description)
+
+    if (imageFile) {
+      data.append("image", imageFile)
     }
-    
-    try {
-        setIsSaving(true)
-        const method = showEdit ? "PUT" : "POST"
-        const url = showEdit   ? `http://localhost:3002/inventory/${showEdit}`
-        : "http://localhost:3002/inventory";
-  await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      
-      resetForm()
-      await fetchUsers()
-       
-    } catch (error) {
-        console.log('save Failed')
-    } finally{
-        setIsSaving(false)
-    }
+
+    const method = showEdit ? "PUT" : "POST"
+    const url = showEdit
+      ? `http://localhost:3010/who/${showEdit}`
+      : "http://localhost:3010/who"
+
+    await fetch(url, {
+      method,
+      body: data, 
+    })
+
+    resetForm()
+    await fetchUsers()
+  } catch (err) {
+    console.error("Save failed", err)
+  } finally {
+    setIsSaving(false)
+  }
 }
 
 
+
 const resetForm = () =>{
-    setFormData({email:'',first:'',last:'',dobDay:'',dobMonth:'',dobYear:'',gender:'',password:''})
+    setFormData({
+       name: "",
+      title: "",
+      description: ""
+    })
+    setImageFile(null)
+    setImagePreview(null)
     setShowEdit(null)
 }
 
@@ -109,7 +126,7 @@ const resetForm = () =>{
  async function handleDelete(id:number) {
     try {
         setIsSaving(true)
-       await fetch(`http://localhost:3002/inventory/${id}`, {
+       await fetch(`http://localhost:3010/who/${id}`, {
   method: 'DELETE',
 });
         await fetchUsers()
@@ -179,13 +196,15 @@ if (loadingState) {
         <CircleOff color="white" size={35}/>
         <h1 className="text-white/80 font-medium text-md mt-4">No Agents Added try adding one</h1>
      </div> 
-    : users.map((user: Users) => (
+    : users.map((user: Who) => (
       <div
         key={user.id}
         onClick={()=>clickEdit(user)}
         className={`p-1.5 rounded-md ${showEdit === user.id ? 'bg-white/10 ':'hover:bg-white/5'} mt-2 group hover:bg-white/5 flex items-center justify-between w-full cursor-pointer transition-all duration-300`}
       >
-        {user.first}
+
+        {user.name}
+        
         <button type="button" onClick={(e)=>{
           e.stopPropagation()
           setShowEdit(user.id)
@@ -236,41 +255,55 @@ if (loadingState) {
   </div>
 
   {/* Fields */}
+<div className="flex flex-col gap-2">
+  <div className="flex items-center justify-between w-full">
+    <label className="text-sm text-white/70">Agent Photo</label>
+ <input
+      type="file"
+      accept="image/*"
+      onChange={(e) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setImageFile(file)
+        setImagePreview(URL.createObjectURL(file))
+      }}
+      className="text-sm bg-yellow-300 text-black rounded-lg p-1 "
+    />
+  </div>
+  <div className="flex items-center gap-4">
+    <div className="h-40 w-full rounded-lg border border-[#343434] flex items-center justify-center overflow-hidden">
+      {imagePreview ? (
+        <img
+          src={imagePreview}
+          className="w-full h-full object-cover bg-center"
+          alt="Preview"
+        />
+      ) : (
+        <span className="text-xs text-white/40">No image</span>
+      )}
+    </div>
+
+   
+  </div>
+</div>
   <div className="flex flex-col gap-1">
-    <label className="text-sm text-white/70">Email</label>
-    <input value={formData.email} onChange={(e)=>setFormData(p=>({...p , email:e.target.value}))} className="input" />
+    <label className="text-sm text-white/70">Name</label>
+    <input value={formData.name} onChange={(e)=>setFormData(p=>({...p , name:e.target.value}))} className="input" />
   </div>
 
-  <div className="flex flex-col sm:flex-row gap-4">
+  <div className="flex flex-col gap-4">
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-sm text-white/70">First Name</label>
-      <input value={formData.first} onChange={(e)=>setFormData(p=>({...p , first:e.target.value}))} className="input" />
+      <label className="text-sm text-white/70">Title / Position</label>
+      <input value={formData.title} onChange={(e)=>setFormData(p=>({...p , title:e.target.value}))} className="input" />
     </div>
 
     <div className="flex flex-col gap-1 w-full">
-      <label className="text-sm text-white/70">Last Name</label>
-      <input value={formData.last } onChange={(e)=>setFormData(p=>({...p , last:e.target.value}))} className="input" />
+      <label className="text-sm text-white/70">Description</label>
+      <input value={formData.description } onChange={(e)=>setFormData(p=>({...p , description:e.target.value}))} className="input" />
     </div>
   </div>
 
-  <div className="flex flex-col sm:flex-row gap-6  ">
-    <div className="flex flex-col gap-1">
-    <label className="text-sm text-white/70">Day</label>
-    <input value={formData.dobDay} onChange={(e)=>setFormData(p=>({...p , dobDay:e.target.value}))} className="input " />
-    </div>
-    <div className="flex flex-col gap-1">
-    <label className="text-sm text-white/70">Month</label>
-    <input value={formData.dobMonth} onChange={(e)=>setFormData(p=>({...p , dobMonth:e.target.value}))} className="input " />
-    </div>
-    <div className="flex flex-col gap-1">
-    <label className="text-sm text-white/70">Year</label>
-    <input value={formData.dobYear} onChange={(e)=>setFormData(p=>({...p , dobYear:e.target.value}))} className="input" />
-    </div>
-  </div>
-  <div className="flex flex-col gap-1">
-    <label className="text-sm text-white/70">Password</label>
-    <input value={formData.password} onChange={(e)=>setFormData(p=>({...p , password:e.target.value}))} type="password" className="input" />
-  </div>
   <button disabled={isSaving} onClick={handleSubmit} className="w-full p-1.5 rounded-lg bg-yellow-400 text-yellow-900 border hover:bg-yellow-500 transition-all duration-300 cursor-pointer border-green-900">
     {showEdit ? 'Update' : 'Create'}
   </button>
