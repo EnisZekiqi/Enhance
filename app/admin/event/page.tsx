@@ -8,10 +8,10 @@ import LogoutButton from "@/app/Components/LogoutButton";
 
 type Event = {
   id: number,
-  date: string,
+  event_date: string,
   title: string,
-  describe: string,
-  img: string,
+  description: string,
+  image: string,
   column: number
 }
 
@@ -21,15 +21,14 @@ const EventEdit = () => {
   const [isSaving, setIsSaving] = useState(false)
   const [showEdit, setShowEdit] = useState<number | null>(null)
   const [modal, setModal] = useState(false)
-
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
+ const [imageFile, setImageFile] = useState<File | null>(null)
+const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   const emptyForm = {
-    date: "",
     title: "",
-    describe: "",
-    img: "",
-    column: 0
+  description: "",
+  event_date: "", // IMPORTANT: always a string
+  image: ""
   }
 
   const [formData, setFormData] = useState(emptyForm)
@@ -38,9 +37,9 @@ const EventEdit = () => {
   async function fetchEvents() {
     try {
       setIsFetching(true)
-      const res = await fetch("/events.json")
+      const res = await fetch("http://localhost:3010/events")
       const data = await res.json()
-      setEvents(data.events)
+      setEvents(data)
     } catch (err) {
       console.error("Failed to fetch events", err)
     } finally {
@@ -52,57 +51,76 @@ const EventEdit = () => {
     fetchEvents()
   }, [])
 
+
   const clickEdit = (event: Event) => {
     setShowEdit(event.id)
     setFormData({
-      date: event.date,
-      title: event.title,
-      describe: event.describe,
-      img: event.img,
-      column: event.column
-    })
+    title: event.title ?? "",
+    description: event.description ?? "",
+    image: event.image ?? "",
+    event_date: event.event_date
+      ? event.event_date.split("T")[0]
+      : ""
+  })
+     
+   setImagePreview(
+    event.image ? `http://localhost:3010${event.image}` : null
+     )
+        
+        setImageFile(null)
   }
 
   const isFormFilled = () => {
     return (
-      formData.date.trim() !== "" &&
+      formData.event_date.trim() !== "" &&
       formData.title.trim() !== "" &&
-      formData.describe.trim() !== "" &&
-      formData.img.trim() !== "" &&
-      formData.column !== 0
+      formData.description.trim() !== "" 
     )
   }
 
   const resetForm = () => {
     setFormData(emptyForm)
+    setImageFile(null)
+    setImagePreview(null)
     setShowEdit(null)
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!isFormFilled()) return
+  e.preventDefault()
+  if (!isFormFilled()) return
 
-    try {
-      setIsSaving(true)
-      const method = showEdit ? "PUT" : "POST"
-      const url = showEdit
-        ? `http://localhost:3002/inventory/${showEdit}`
-        : "http://localhost:3002/inventory"
+  try {
+    setIsSaving(true)
 
-      await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-      })
+    const data = new FormData()
+    data.append("title", formData.title)
+    data.append("description", formData.description)
+    data.append("event_date", formData.event_date)
 
-      resetForm()
-      await fetchEvents()
-    } catch (error) {
-      console.log("save Failed")
-    } finally {
-      setIsSaving(false)
+    // only send image if user selected a new one
+    if (imageFile) {
+      data.append("image", imageFile)
     }
+
+    const method = showEdit ? "PUT" : "POST"
+    const url = showEdit
+      ? `http://localhost:3010/events/${showEdit}`
+      : "http://localhost:3010/events"
+
+    await fetch(url, {
+      method,
+      body: data, // 👈 important
+    })
+
+    resetForm()
+    await fetchEvents()
+  } catch (error) {
+    console.log("save Failed")
+  } finally {
+    setIsSaving(false)
   }
+}
+
 
   async function handleDelete(id: number) {
     try {
@@ -121,8 +139,6 @@ const EventEdit = () => {
   const [openMenu, setOpenMenu] = useState(false)
 
 
-  const firstColumn = events.filter((items)=>items.column === 1)
- const secondColumn = events.filter((items)=>items.column === 2)
 
   const loadingState = isFetching || isSaving
 
@@ -251,12 +267,51 @@ const EventEdit = () => {
               }
             </AnimatePresence>
           </div>
+              <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between w-full">
+              <label className="text-sm text-white/70">Event Photo</label>
+          <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
 
+                  setImageFile(file)
+                  setImagePreview(URL.createObjectURL(file))
+                }}
+                className="text-sm bg-yellow-300 text-black rounded-lg p-1 "
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="h-40 w-full rounded-lg border border-[#343434] flex items-center justify-center overflow-hidden">
+                {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    className="w-full h-full object-cover bg-center"
+                    alt="Preview"
+                  />
+                ) : (
+                  <span className="text-xs text-white/40">No image</span>
+                )}
+              </div>
+
+            
+            </div>
+          </div>
           {/* Fields */}
           <div className="flex flex-col gap-1">
-            <label>Date</label>
-            <input className="input" type="text" placeholder="DD/MM/YYYY" value={formData.date} onChange={(e) => setFormData(p => ({ ...p, date: e.target.value }))} />
-          </div>
+              <label>Date</label>
+              <input
+                type="date"
+                className="input"
+                value={formData.event_date}
+                onChange={(e) =>
+                  setFormData(p => ({ ...p, event_date: e.target.value }))
+                }
+              />
+            </div>
+
 
           <div className="flex flex-col gap-1">
             <label>Title</label>
@@ -265,56 +320,13 @@ const EventEdit = () => {
 
           <div className="flex flex-col gap-1">
             <label>Description</label>
-            <textarea className="input" value={formData.describe} onChange={(e) => setFormData(p => ({ ...p, describe: e.target.value }))} />
+            <textarea className="input" value={formData.description} onChange={(e) => setFormData(p => ({ ...p, description: e.target.value }))} />
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label>Column</label>
-            <select className="input" value={formData.column} onChange={(e) => setFormData(p => ({ ...p, column: Number(e.target.value) }))}>
-              <option value={0}>Select column</option>
-              <option value={1} className="hidden sm:block">Up</option>
-              <option value={2} className="hidden sm:block">Down</option>
-              <option value={1} className="block sm:hidden">Left</option>
-              <option value={2} className="block sm:hidden">Right</option>
-            </select>
-            {firstColumn.length >= 6 ?
-             <>
-            <p className="text-xs font-light text-white/50 hidden sm:block mt-1">Up Column is full</p>
-            <p className="text-xs font-light text-white/50 block sm:hidden mt-1">Left Column is full</p>
-            </>:secondColumn.length >=6 ? <>
-             <p className="text-xs font-light text-white/50 hidden sm:block mt-1">Down Column is full</p>
-            <p className="text-xs font-light text-white/50 block sm:hidden mt-1">Right Column is full</p>
-            </> :''}
-          </div>
+          
 
           {/* Image / preview */}
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            className="h-40 w-full rounded-lg border border-[#343434]
-                       flex items-center justify-center cursor-pointer
-                       bg-cover bg-center relative overflow-hidden"
-            style={formData.img ? { backgroundImage: `url(${formData.img})` } : undefined}
-          >
-            {!formData.img && (
-              <div className="flex flex-col items-center justify-center text-white/50">
-                <Import />
-                <p className="text-xs sm:text-sm font-light">Import File</p>
-              </div>
-            )}
-          </div>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (!file) return
-              const previewUrl = URL.createObjectURL(file)
-              setFormData(p => ({ ...p, img: previewUrl }))
-            }}
-          />
+         
 
           <button disabled={isSaving} onClick={handleSubmit} className="w-full p-1.5 rounded-lg bg-yellow-400 text-yellow-900 border hover:bg-yellow-500 transition-all duration-300 cursor-pointer border-green-900">
             {showEdit ? 'Update' : 'Create'}
