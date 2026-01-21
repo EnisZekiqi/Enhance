@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image";
-import { Import, Trash, CircleOff, ChevronRight } from "lucide-react";
+import { ArrowRightLeft, Trash, CircleOff, ChevronRight } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import AdminNav from "@/app/Components/AminNav";
@@ -12,7 +12,8 @@ type Event = {
   title: string,
   description: string,
   image: string,
-  column: number
+  column: number,
+  position:number
 }
 
 const EventEdit = () => {
@@ -28,7 +29,8 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
     title: "",
   description: "",
   event_date: "", // IMPORTANT: always a string
-  image: ""
+  image: "",
+  position:1
   }
 
   const [formData, setFormData] = useState(emptyForm)
@@ -58,6 +60,7 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
     title: event.title ?? "",
     description: event.description ?? "",
     image: event.image ?? "",
+    position:event.position,
     event_date: event.event_date
       ? event.event_date.split("T")[0]
       : ""
@@ -74,9 +77,34 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
     return (
       formData.event_date.trim() !== "" &&
       formData.title.trim() !== "" &&
-      formData.description.trim() !== "" 
+      formData.description.trim() !== "" &&
+      formData.position !== 0
     )
   }
+
+const firstColumn = events.filter(
+  item => item.position === 1 && item.id !== showEdit
+)
+
+const secondColumn = events.filter(
+  item => item.position === 2 && item.id !== showEdit
+)
+
+const MAX_PER_COLUMN = 7
+
+const isSelectedPositionFull = () => {
+  if (formData.position === 1) {
+    return firstColumn.length >= MAX_PER_COLUMN
+  }
+
+  if (formData.position === 2) {
+    return secondColumn.length >= MAX_PER_COLUMN
+  }
+
+  return false
+}
+
+  console.log(isSelectedPositionFull())
 
   const resetForm = () => {
     setFormData(emptyForm)
@@ -87,7 +115,12 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
   e.preventDefault()
+
   if (!isFormFilled()) return
+  
+  if (isSelectedPositionFull()) {
+    return
+  }
 
   try {
     setIsSaving(true)
@@ -96,6 +129,7 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
     data.append("title", formData.title)
     data.append("description", formData.description)
     data.append("event_date", formData.event_date)
+    data.append('position',String(formData.position))
 
     // only send image if user selected a new one
     if (imageFile) {
@@ -125,7 +159,7 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
   async function handleDelete(id: number) {
     try {
       setIsSaving(true)
-      await fetch(`http://localhost:3002/inventory/${id}`, {
+      await fetch(`http://localhost:3010/inventory/${id}`, {
         method: "DELETE"
       })
       await fetchEvents()
@@ -138,7 +172,7 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   const [openMenu, setOpenMenu] = useState(false)
 
-
+  
 
   const loadingState = isFetching || isSaving
 
@@ -301,7 +335,7 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
           </div>
           {/* Fields */}
           <div className="flex flex-col gap-1">
-              <label>Date</label>
+              <label className="text-sm text-white/70">Date</label>
               <input
                 type="date"
                 className="input"
@@ -314,16 +348,48 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
 
 
           <div className="flex flex-col gap-1">
-            <label>Title</label>
+            <label className="text-sm text-white/70">Title</label>
             <input className="input" value={formData.title} onChange={(e) => setFormData(p => ({ ...p, title: e.target.value }))} />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label>Description</label>
+            <label className="text-sm text-white/70">Description</label>
             <textarea className="input" value={formData.description} onChange={(e) => setFormData(p => ({ ...p, description: e.target.value }))} />
           </div>
 
-          
+          <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-4 w-full justify-between">
+             <div className="flex flex-col items-start gap-1">
+               <label className="text-sm text-white/70">Position</label>
+            <p className="text-xs font-light flex items-center gap-2 text-white/50">
+            <span className="flex items-center gap-1.5">Position 1 = <em className="hidden sm:block">Up</em> <em className="block sm:hidden">Left</em>
+            </span>  <ArrowRightLeft size={18}/>
+            <span className="flex items-center gap-1.5">Position 1 = <em className="hidden sm:block">Down</em> <em className="block sm:hidden">Right</em></span>
+            </p>
+             </div>
+            {firstColumn.length >= 4 ?
+             <>
+            <p className="text-xs font-light text-red-300 hidden sm:block mt-1">Up Column is full</p>
+            <p className="text-xs font-light text-red-300 block sm:hidden mt-1">Left Column is full</p>
+            </>:secondColumn.length >=4 ? <>
+             <p className="text-xs font-light text-red-3000 hidden sm:block mt-1">Down Column is full</p>
+            <p className="text-xs font-light text-red-300 block sm:hidden mt-1">Right Column is full</p>
+              </>:''}
+          </div>
+            <select
+            className="input mt-1"
+            value={formData.position}
+            onChange={(e) =>
+              setFormData(p => ({
+                ...p,
+                position: Number(e.target.value),
+              }))
+            }
+          >
+            <option value={1}>Up / Left</option>
+            <option value={2}>Down / Right</option>
+          </select>
+          </div>
 
           {/* Image / preview */}
          
