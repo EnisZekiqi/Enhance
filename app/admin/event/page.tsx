@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image";
-import { ArrowRightLeft, Trash, CircleOff, ChevronRight,Import } from "lucide-react";
+import { ArrowRightLeft, Trash, CircleOff, ChevronRight,Import,RotateCcw } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import AdminNav from "@/app/Components/AminNav";
@@ -279,13 +279,13 @@ const isSelectedPositionFull = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1, transition: { duration: 0.3 } }}
                   exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                  className="flex flex-col sm:flex-row items-center justify-between"
+                  className="flex flex-row items-start sm:items-center justify-between"
                 >
                   <div>
                     <h1 className="text-2xl font-medium text-white">Edit Event</h1>
                     <p className="text-white/70 text-xs mt-2">Update the information for the selected event</p>
                   </div>
-                  <button type="button" onClick={resetForm} className="bg-white text-black rounded-lg px-2 hover:bg-white/80 transition-all duration-300 cursor-pointer py-1.5">Reset</button>
+                  <button type="button" onClick={resetForm} className="bg-white text-black rounded-lg px-2 hover:bg-white/80 transition-all duration-300 cursor-pointer py-1.5"><RotateCcw size={18}/></button>
                 </motion.div> :
                 <motion.div
                   className="flex items-center justify-between"

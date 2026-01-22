@@ -1,23 +1,23 @@
 'use client'
 import Image from "next/image";
 
-import { Import,Trash,CircleOff, ChevronRight,RotateCcw } from "lucide-react";
+import { Import,Trash,CircleOff, ChevronRight ,RotateCcw} from "lucide-react";
 import { useState,useEffect,useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import AdminNav from "@/app/Components/AminNav";
 import LogoutButton from "@/app/Components/LogoutButton";
 
-type What = {
+type Partners = {
     id:number,
     title:string,
     description:string,
     image:string,
 }
 
-const WhatEdit = () => {
+const PartnersEdit = () => {
     
  
-    const [users,setUsers]=useState([])
+    const [partners,setPartners]=useState([])
     const [IsFetching,setIsFetching]=useState(false)
     const emptyForm = {
   title: "",
@@ -36,9 +36,9 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
     async function fetchUsers() {
          try {
       setIsFetching(true);
-      const res = await fetch("http://localhost:3010/what");
+      const res = await fetch("http://localhost:3010/partners");
       const data = await res.json();
-      setUsers(data);
+      setPartners(data);
     } catch (err) {
       console.error("Failed to fetch events", err);
     } finally {
@@ -53,7 +53,7 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
     
     
     
-   const clickEdit = (user: What) => {
+   const clickEdit = (user: Partners) => {
   setShowEdit(user.id);
   setFormData({
     title: user.title,
@@ -96,8 +96,8 @@ async function handleSubmit(e: React.FormEvent) {
 
     const method = showEdit ? "PUT" : "POST"
     const url = showEdit
-      ? `http://localhost:3010/what/${showEdit}`
-      : "http://localhost:3010/what"
+      ? `http://localhost:3010/partners/${showEdit}`
+      : "http://localhost:3010/partners"
 
     await fetch(url, {
       method,
@@ -124,7 +124,7 @@ const resetForm = () =>{
  async function handleDelete(id:number) {
     try {
         setIsSaving(true)
-       await fetch(`http://localhost:3010/what/${id}`, {
+       await fetch(`http://localhost:3010/partners/${id}`, {
   method: 'DELETE',
 });
         await fetchUsers()
@@ -182,19 +182,19 @@ if (loadingState) {
          </div>
         <div className="grid grid-cols-1 md:grid-cols-[260px_1fr_280px] gap-12 sm:gap-6 w-full p-3 sm:pl-6">
   {/* LEFT – users */}
-  <aside className={` border-0 sm:border-r ${users.length === 0 ? 'flex overflow-y-auto flex-col justify-between':''} border-[#343434] pr-4`}>
+  <aside className={` border-0 sm:border-r ${partners.length === 0 ? 'flex overflow-y-auto flex-col justify-between':''} border-[#343434] pr-4`}>
     <div>
-        <h1 className="text-white text-xl sm:text-2xl font-medium mb-2">Current Buldings</h1>
+        <h1 className="text-white text-xl sm:text-2xl font-medium mb-2">Current Partner</h1>
     <p className="text-white/70 text-xs mt-2 mb-4">
-      Click on the current buildings to edit them
+      Click on the current partner to edit them
     </p>
     </div>
-    {users.length === 0 ? 
+    {partners.length === 0 ? 
     <div className="flex flex-col items-center mt-10 h-full  justify-center">
         <CircleOff color="white" size={35}/>
         <h1 className="text-white/80 font-medium text-md mt-4">No Agents Added try adding one</h1>
      </div> 
-    : users.map((user: What) => (
+    : partners.map((user: Partners) => (
       <div
         key={user.id}
         onClick={()=>clickEdit(user)}
@@ -223,7 +223,7 @@ if (loadingState) {
         initial={{opacity:0}}
         animate={{opacity:1,transition:{duration:0.3}}}
         exit={{opacity:0,transition:{duration:0.3}}}
-        className="flex flex-row items-center justify-between">
+        className="flex flex-row items-start sm:items-center justify-between">
     <div>
     <h1 className="text-2xl font-medium text-white">Edit Building</h1>
     <p className="text-white/70 text-xs mt-2">
@@ -239,9 +239,9 @@ if (loadingState) {
         exit={{opacity:0,transition:{duration:0.3}}}
     >
     <div className="">
-        <h1 className="text-xl sm:text-2xl font-medium text-white">Edit / Add  / Delete Bulding</h1>
+        <h1 className="text-xl sm:text-2xl font-medium text-white">Edit / Add  / Delete Partner</h1>
     <p className="text-white/70 text-xs  mt-2">
-      Update the information & add new information or delete information of your agents
+      Update the information & add new information or delete information of your partner
     </p>
     </div>
    
@@ -256,7 +256,7 @@ if (loadingState) {
 
 <div className="flex flex-col gap-2">
   <div className="flex items-center justify-between w-full">
-    <label className="text-sm text-white/70">Building Photo</label>
+    <label className="text-sm text-white/70">Partner Photo</label>
  <input
       type="file"
       accept="image/*"
@@ -293,7 +293,7 @@ if (loadingState) {
     </div>
 
    {imageFile && (
-  <p className="text-xs text-white/60 mt-1">
+  <p className="text-xs truncate w-1/2 text-white/60 mt-1">
     Selected: <em className="text-white">{imageFile.name}</em>
   </p>
 )}
@@ -406,4 +406,4 @@ if (loadingState) {
   )
 }
 
-export default WhatEdit;
+export default PartnersEdit;

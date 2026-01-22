@@ -3,7 +3,6 @@
 import Navbar from "../Components/Navbar";
 import { motion } from "motion/react";
 import { useState } from "react";
-import what from '@/public/what.json'
 import React from "react";
 
 type What = {
@@ -107,7 +106,7 @@ function DefaultContent({ isActive = false,title,images }: CardProps) {
     : `http://localhost:3010/${images}`;
 
   return (
-    <p
+    <div
       className={`
              opacity-100
               ${activeHover ? 'grayscale-[0%] brightness-[100%] contrast-[100%]':'grayscale-[60%] brightness-[85%] contrast-[85%]'} group-hover:brightness-100 group-hover:contrast-100 w-[310px] h-[330px] sm:w-[330px] sm:h-[350px]  rounded-lg p-2 transition-all duration-200 bg-cover bg-center`}
@@ -116,7 +115,7 @@ function DefaultContent({ isActive = false,title,images }: CardProps) {
       onMouseLeave={() => setHovered(false)}
     >
       <h1 className={`text-xl font-medium opacity-100 z-50 transition-colors duration-200 ${hovered || isActive ? 'text-yellow-300' : 'text-white'}`}>{title}</h1>
-    </p>
+    </div>
   );
 }
 
