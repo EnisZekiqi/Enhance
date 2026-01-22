@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image";
-import { ArrowRightLeft, Trash, CircleOff, ChevronRight } from "lucide-react";
+import { ArrowRightLeft, Trash, CircleOff, ChevronRight,Import } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import AdminNav from "@/app/Components/AminNav";
@@ -307,6 +307,7 @@ const isSelectedPositionFull = () => {
           <input
                 type="file"
                 accept="image/*"
+                id="image-upload"
                 onChange={(e) => {
                   const file = e.target.files?.[0]
                   if (!file) return
@@ -314,10 +315,18 @@ const isSelectedPositionFull = () => {
                   setImageFile(file)
                   setImagePreview(URL.createObjectURL(file))
                 }}
-                className="text-sm bg-yellow-300 text-black rounded-lg p-1 "
+                className="hidden "
               />
+               <label
+                htmlFor="image-upload"
+                className="inline-flex items-center gap-1.5 justify-center
+                          px-4 py-2 rounded-lg bg-yellow-400 text-black
+                          cursor-pointer hover:bg-yellow-300 transition text-sm"
+              >
+                <Import size={18}/> Upload Image
+              </label>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col items-start gap-4">
               <div className="h-40 w-full rounded-lg border border-[#343434] flex items-center justify-center overflow-hidden">
                 {imagePreview ? (
                   <img
@@ -329,7 +338,11 @@ const isSelectedPositionFull = () => {
                   <span className="text-xs text-white/40">No image</span>
                 )}
               </div>
-
+              {imageFile && (
+                <p className="text-xs truncate w-1/2 text-white/60 mt-1">
+                  Selected: <em className="text-white">{imageFile.name}</em>
+                </p>
+              )}
             
             </div>
           </div>

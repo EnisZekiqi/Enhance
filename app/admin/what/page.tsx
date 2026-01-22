@@ -6,16 +6,12 @@ import { useState,useEffect,useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import AdminNav from "@/app/Components/AminNav";
 import LogoutButton from "@/app/Components/LogoutButton";
-type Users = {
+
+type What = {
     id:number,
-    name:string,
-    describe:string,
-    job:string,
-    info:string,
-    background:{
-        before:string,
-        after:string
-    }
+    title:string,
+    description:string,
+    image:string,
 }
 
 const WhatEdit = () => {
@@ -24,30 +20,25 @@ const WhatEdit = () => {
     const [users,setUsers]=useState([])
     const [IsFetching,setIsFetching]=useState(false)
     const emptyForm = {
-  name: "",
-  describe: "",
-  job: "",
-  info: "",
-  background: {
-    before: "",
-    after: "",
-  },
+  title: "",
+  description: "",
+  image: "",
 };
-const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const [formData,setFormData]=useState(emptyForm)
     const [isSaving,setIsSaving]=useState(false)
     const [showEdit, setShowEdit] = useState<number | null>(null)
    const [modal,setModal]=useState(false)
-
+const [imageFile, setImageFile] = useState<File | null>(null)
+const [imagePreview, setImagePreview] = useState<string | null>(null)
 
 
     async function fetchUsers() {
          try {
       setIsFetching(true);
-      const res = await fetch("/what.json");
+      const res = await fetch("http://localhost:3010/what");
       const data = await res.json();
-      setUsers(data.cards);
+      setUsers(data);
     } catch (err) {
       console.error("Failed to fetch events", err);
     } finally {
@@ -60,69 +51,72 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
       fetchUsers()
     }, [])
     
-    console.log(users)
     
-    const clickEdit = (user: Users) => {
-        setShowEdit(user.id);
-        setFormData({
-            name: user.name,
-            describe: user.describe,
-            job: user.job,
-            info: user.info,
-            background: {
-            before: user.background?.before || "",
-            after: user.background?.after || "",
-            },
-        });
-        };
+    
+   const clickEdit = (user: What) => {
+  setShowEdit(user.id);
+  setFormData({
+    title: user.title,
+    description: user.description,
+    image: user.image,
+  });
+
+  setImageFile(null);
+  setImagePreview(
+    user.image ? `http://localhost:3010${user.image}` : null
+  );
+};
+
 
 
 
 
 const isFormFilled = () => {
   return (
-    formData.name.trim() !== "" &&
-    formData.describe.trim() !== "" &&
-    formData.job.trim() !== "" &&
-    formData.info.trim() !== "" &&
-    formData.background.before.trim() !== "" &&
-    formData.background.after.trim() !== ""
+    formData.title.trim() !== "" &&
+    formData.description.trim() !== "" 
   );
 };
 
-console.log(isFormFilled())
 
- async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    
-    if (!isFormFilled()) {
-        return
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault()
+  if (!isFormFilled()) return
+
+  try {
+    setIsSaving(true)
+
+    const data = new FormData()
+    data.append("title", formData.title)
+    data.append("description", formData.description)
+
+    if (imageFile) {
+      data.append("image", imageFile)
     }
-    
-    try {
-        setIsSaving(true)
-        const method = showEdit ? "PUT" : "POST"
-        const url = showEdit   ? `http://localhost:3002/inventory/${showEdit}`
-        : "http://localhost:3002/inventory";
-  await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      
-      resetForm()
-      await fetchUsers()
-       
-    } catch (error) {
-        console.log('save Failed')
-    } finally{
-        setIsSaving(false)
-    }
+
+    const method = showEdit ? "PUT" : "POST"
+    const url = showEdit
+      ? `http://localhost:3010/what/${showEdit}`
+      : "http://localhost:3010/what"
+
+    await fetch(url, {
+      method,
+      body: data, 
+    })
+
+    resetForm()
+    await fetchUsers()
+  } catch (err) {
+    console.error("Save failed", err)
+  } finally {
+    setIsSaving(false)
+  }
 }
-
 
 const resetForm = () =>{
     setFormData(emptyForm)
+    setImageFile(null)
+    setImagePreview(null)
     setShowEdit(null)
 }
 
@@ -130,7 +124,7 @@ const resetForm = () =>{
  async function handleDelete(id:number) {
     try {
         setIsSaving(true)
-       await fetch(`http://localhost:3002/inventory/${id}`, {
+       await fetch(`http://localhost:3010/what/${id}`, {
   method: 'DELETE',
 });
         await fetchUsers()
@@ -200,13 +194,13 @@ if (loadingState) {
         <CircleOff color="white" size={35}/>
         <h1 className="text-white/80 font-medium text-md mt-4">No Agents Added try adding one</h1>
      </div> 
-    : users.map((user: Users) => (
+    : users.map((user: What) => (
       <div
         key={user.id}
         onClick={()=>clickEdit(user)}
         className={`p-1.5 rounded-md ${showEdit === user.id ? 'bg-white/10 ':'hover:bg-white/5'} mt-2 group hover:bg-white/5 flex items-center justify-between w-full cursor-pointer transition-all duration-300`}
       >
-        {user.name}
+        {user.title}
         <button type="button" onClick={(e)=>{
           e.stopPropagation()
           setShowEdit(user.id)
@@ -258,114 +252,78 @@ if (loadingState) {
 
   {/* Fields */}
  {/* Background BEFORE upload / preview */}
-<div
-  onClick={() => fileInputRef.current?.click()}
-  className="h-40 w-full rounded-lg border border-[#343434]
-             flex items-center justify-center cursor-pointer
-             bg-cover bg-center relative overflow-hidden"
-  style={
-    formData.background.before
-      ? { backgroundImage: `url(${formData.background.before})` }
-      : undefined
-  }
+
+
+<div className="flex flex-col gap-2">
+  <div className="flex items-center justify-between w-full">
+    <label className="text-sm text-white/70">Building Photo</label>
+ <input
+      type="file"
+      accept="image/*"
+       id="image-upload"
+      onChange={(e) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setImageFile(file)
+        setImagePreview(URL.createObjectURL(file))
+      }}
+      className="hidden "
+    />
+    <label
+  htmlFor="image-upload"
+  className="inline-flex items-center gap-1.5 justify-center
+             px-4 py-2 rounded-lg bg-yellow-400 text-black
+             cursor-pointer hover:bg-yellow-300 transition text-sm"
 >
-  {!formData.background.before && (
-    <div className="flex flex-col items-center justify-center text-white/50">
-      <Import />
-      <p className="text-xs sm:text-sm font-light">Import File</p>
+  <Import size={18}/> Upload Image
+</label>
+  </div>
+  <div className="flex flex-col items-start gap-4">
+    <div className="h-40 w-full rounded-lg border border-[#343434] flex items-center justify-center overflow-hidden">
+      {imagePreview ? (
+        <img
+          src={imagePreview}
+          className="w-full h-full object-cover bg-center"
+          alt="Preview"
+        />
+      ) : (
+        <span className="text-xs text-white/40">No image</span>
+      )}
     </div>
-  )}
+
+   {imageFile && (
+  <p className="text-xs truncate w-1/2 text-white/60 mt-1">
+    Selected: <em className="text-white">{imageFile.name}</em>
+  </p>
+)}
+  </div>
 </div>
-
-<input
-  ref={fileInputRef}
-  type="file"
-  accept="image/*"
-  hidden
-  onChange={(e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const previewUrl = URL.createObjectURL(file);
-
-    setFormData((p) => ({
-      ...p,
-      background: {
-        ...p.background,
-        before: previewUrl,
-      },
-    }));
-  }}
-/>
-
-
-  <input
-  className="input"
-  placeholder="Background BEFORE image URL"
-  value={formData.background.before}
-  onChange={(e) =>
-    setFormData((p) => ({
-      ...p,
-      background: { ...p.background, before: e.target.value },
-    }))
-  }
-/>
-
-<input
-  className="input"
-  placeholder="Background AFTER image URL"
-  value={formData.background.after}
-  onChange={(e) =>
-    setFormData((p) => ({
-      ...p,
-      background: { ...p.background, after: e.target.value },
-    }))
-  }
-/>
 
   <div className="flex flex-col gap-1">
-  <label>Name</label>
+  <label  className="text-sm text-white/70">Title</label>
   <input
     className="input"
-    value={formData.name}
+    value={formData.title}
     onChange={(e) =>
-      setFormData((p) => ({ ...p, name: e.target.value }))
+      setFormData((p) => ({ ...p, title: e.target.value }))
     }
   />
 </div>
 
 <div className="flex flex-col gap-1">
-  <label>Job</label>
+  <label  className="text-sm text-white/70">Description</label>
   <input
     className="input"
-    value={formData.job}
+    value={formData.description}
     onChange={(e) =>
-      setFormData((p) => ({ ...p, job: e.target.value }))
+      setFormData((p) => ({ ...p, description: e.target.value }))
     }
   />
 </div>
 
-<div className="flex flex-col gap-1">
-  <label>Description</label>
-  <textarea
-    className="input"
-    value={formData.describe}
-    onChange={(e) =>
-      setFormData((p) => ({ ...p, describe: e.target.value }))
-    }
-  />
-</div>
 
-<div className="flex flex-col gap-1">
-  <label>Info</label>
-  <textarea
-    className="input"
-    value={formData.info}
-    onChange={(e) =>
-      setFormData((p) => ({ ...p, info: e.target.value }))
-    }
-  />
-</div>
+
 
   <button disabled={isSaving} onClick={handleSubmit} className="w-full p-1.5 rounded-lg bg-yellow-400 text-yellow-900 border hover:bg-yellow-500 transition-all duration-300 cursor-pointer border-green-900">
     {showEdit ? 'Update' : 'Create'}
