@@ -1,15 +1,21 @@
 'use client'
 
 import Navbar from "../Components/Navbar";
-import { motion,AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { motion } from "motion/react";
+import { useState,useContext } from "react";
 import React from "react";
-
+import { LanguageContext } from "../context/LanguageContext";
 
 type Partners ={
     id:number,
-    title:string,
-    description:string,
+    title:{
+      en:string,
+      fr:string,
+    }
+    description:{
+      en:string,
+      fr:string
+    }
     image:string,
 }
 
@@ -21,6 +27,14 @@ const PartnersClient = ({partners}:PartnersProps) => {
     
 const [active, setActive] = useState<number | null>(null);
 
+const userContext = useContext(LanguageContext);
+
+  if (!userContext) throw new Error("useContext must be used within a UserProvider");
+
+  const { user } = userContext;
+
+
+const lang: "en" | "fr" = user === "fr" ? "fr" : "en";
 
     return ( 
 
@@ -48,7 +62,7 @@ const [active, setActive] = useState<number | null>(null);
                 isActive={isActive}
                 id={items.id}
                 images={items.image}
-                title={items.title}
+                title={items.title[lang]}
               />
             </motion.div>
       
@@ -70,8 +84,8 @@ const [active, setActive] = useState<number | null>(null);
               <ExpandedContent
                 id={items.id}
                images={items.image}
-                title={items.title}
-                description={items.description}
+                title={items.title[lang]}
+                description={items.description[lang]}
               />
             </motion.div>
           </motion.div>
@@ -108,7 +122,7 @@ const [active, setActive] = useState<number | null>(null);
             className={`
                    opacity-100
                     ${activeHover ? 'grayscale-[0%] brightness-[100%] contrast-[100%]':'grayscale-[60%] brightness-[85%] contrast-[85%]'} group-hover:brightness-100 group-hover:contrast-100 w-[310px] h-[330px] sm:w-[330px] sm:h-[350px]  rounded-lg p-2 transition-all duration-200 bg-cover bg-center`}
-            style={{ backgroundImage: `url(${imgUrl})` }}
+            style={{ backgroundImage: `url(${imgUrl})`,backgroundColor:'white',backgroundSize:'contain',backgroundRepeat:'no-repeat'}}
             onMouseEnter={()=>setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >

@@ -2,15 +2,22 @@
 
 import Navbar from "../Components/Navbar";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState,useContext } from "react";
 import React from "react";
-
-type What = {
-   id:number,
-   title:string,
-   description:string,
-   image:string,
+import { LanguageContext } from "../context/LanguageContext";
+type What ={
+    id:number,
+    title:{
+      en:string,
+      fr:string,
+    }
+    description:{
+      en:string,
+      fr:string
+    }
+    image:string,
 }
+
 
 type WhatProps = {
     what:What[]
@@ -21,7 +28,14 @@ const What = ({what}:WhatProps) => {
  const [active, setActive] = useState<number | null>(null);
 
 
+const userContext = useContext(LanguageContext);
 
+  if (!userContext) throw new Error("useContext must be used within a UserProvider");
+
+  const { user } = userContext;
+
+
+const lang: "en" | "fr" = user === "fr" ? "fr" : "en";
 
 console.log(active)
 
@@ -50,7 +64,7 @@ console.log(active)
           isActive={isActive}
           id={items.id}
           images={items.image}
-          title={items.title}
+         title={items.title[lang]}
         />
       </motion.div>
 
@@ -72,8 +86,8 @@ console.log(active)
         <ExpandedContent
           id={items.id}
          images={items.image}
-          title={items.title}
-          description={items.description}
+          title={items.title[lang]}
+          description={items.description[lang]}
         />
       </motion.div>
     </motion.div>

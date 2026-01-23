@@ -11,7 +11,7 @@ type UserContextType = {
 export const LanguageContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<string>("english");
+  const [user, setUser] = useState<string>("en");
   const [clicked, setClicked] = useState<string>("");
 
   return (

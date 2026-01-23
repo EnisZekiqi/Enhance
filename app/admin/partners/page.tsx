@@ -7,22 +7,28 @@ import { AnimatePresence, motion } from "motion/react";
 import AdminNav from "@/app/Components/AminNav";
 import LogoutButton from "@/app/Components/LogoutButton";
 
-type Partners = {
-    id:number,
-    title:string,
-    description:string,
-    image:string,
-}
+type LocalizedText = {
+  en: string;
+  fr: string;
+};
+
+ type Partners = {
+  id: number;
+  title: LocalizedText;
+  description: LocalizedText;
+  image: string | null;
+};
 
 const PartnersEdit = () => {
     
  
     const [partners,setPartners]=useState([])
     const [IsFetching,setIsFetching]=useState(false)
-    const emptyForm = {
-  title: "",
-  description: "",
-  image: "",
+   const emptyForm = {
+  title_en: "",
+  title_fr: "",
+  description_en: "",
+  description_fr: "",
 };
 
     const [formData,setFormData]=useState(emptyForm)
@@ -53,17 +59,17 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
     
     
     
-   const clickEdit = (user: Partners) => {
-  setShowEdit(user.id);
+   const clickEdit = (partner: Partners) => {
+  setShowEdit(partner.id);
   setFormData({
-    title: user.title,
-    description: user.description,
-    image: user.image,
+    title_en: partner.title.en,
+    title_fr: partner.title.fr,
+    description_en: partner.description.en,
+    description_fr: partner.description.fr,
   });
 
-  setImageFile(null);
   setImagePreview(
-    user.image ? `http://localhost:3010${user.image}` : null
+    partner.image ? `http://localhost:3010${partner.image}` : null
   );
 };
 
@@ -71,10 +77,13 @@ const [imagePreview, setImagePreview] = useState<string | null>(null)
 
 
 
+
 const isFormFilled = () => {
   return (
-    formData.title.trim() !== "" &&
-    formData.description.trim() !== "" 
+    formData.title_en.trim() !== "" &&
+    formData.description_en.trim() !== "" &&
+    formData.title_fr.trim() !== "" &&
+    formData.description_fr.trim() !== "" 
   );
 };
 
@@ -86,9 +95,12 @@ async function handleSubmit(e: React.FormEvent) {
   try {
     setIsSaving(true)
 
-    const data = new FormData()
-    data.append("title", formData.title)
-    data.append("description", formData.description)
+ const data = new FormData();
+data.append("title_en", formData.title_en);
+data.append("title_fr", formData.title_fr);
+data.append("description_en", formData.description_en);
+data.append("description_fr", formData.description_fr);
+
 
     if (imageFile) {
       data.append("image", imageFile)
@@ -200,7 +212,7 @@ if (loadingState) {
         onClick={()=>clickEdit(user)}
         className={`p-1.5 rounded-md ${showEdit === user.id ? 'bg-white/10 ':'hover:bg-white/5'} mt-2 group hover:bg-white/5 flex items-center justify-between w-full cursor-pointer transition-all duration-300`}
       >
-        {user.title}
+        {user.title.en}
         <button type="button" onClick={(e)=>{
           e.stopPropagation()
           setShowEdit(user.id)
@@ -301,27 +313,45 @@ if (loadingState) {
 </div>
 
   <div className="flex flex-col gap-1">
-  <label  className="text-sm text-white/70">Title</label>
-  <input
-    className="input"
-    value={formData.title}
-    onChange={(e) =>
-      setFormData((p) => ({ ...p, title: e.target.value }))
-    }
-  />
+  <label className="text-sm text-white/70">Title (EN)</label>
+<input
+  className="input"
+  value={formData.title_en}
+  onChange={(e) =>
+    setFormData((p) => ({ ...p, title_en: e.target.value }))
+  }
+/>
 </div>
-
 <div className="flex flex-col gap-1">
-  <label  className="text-sm text-white/70">Description</label>
+  <label className="text-sm text-white/70">Title (FR)</label>
+<input
+  className="input"
+  value={formData.title_fr}
+  onChange={(e) =>
+    setFormData((p) => ({ ...p, title_fr: e.target.value }))
+  }
+/>
+</div>
+<div className="flex flex-col gap-1">
+  <label  className="text-sm text-white/70">Description (EN)</label>
   <input
     className="input"
-    value={formData.description}
+    value={formData.description_en}
     onChange={(e) =>
-      setFormData((p) => ({ ...p, description: e.target.value }))
+      setFormData((p) => ({ ...p, description_en: e.target.value }))
     }
   />
 </div>
-
+<div className="flex flex-col gap-1">
+  <label  className="text-sm text-white/70">Description (FR)</label>
+  <input
+    className="input"
+    value={formData.description_fr}
+    onChange={(e) =>
+      setFormData((p) => ({ ...p, description_fr: e.target.value }))
+    }
+  />
+</div>
 
 
 

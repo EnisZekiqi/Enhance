@@ -35,7 +35,7 @@ const TopCards = events.filter((items)=> items.position === 1) /// up / left pos
 
 const BottomCards = events.filter((items)=>items.position === 2 ) 
 
-console.log(TopCards)
+console.log(BottomCards)
 /// down /right positioned events
 
   // Horizontal movement (adjust percentages if needed)

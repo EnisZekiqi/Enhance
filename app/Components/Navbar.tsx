@@ -34,8 +34,9 @@ const Navbar = () => {
   const { user, setUser } = userContext;
   const {clicked}=userContext
   const switchLanguage =(name:string)=>{
-  setUser((prev : string) => (prev === name ? 'english' : name))
+  setUser(prev => (prev === "en" ? "fr" : "en"));
   }
+  console.log(user)
 
   const [modal,setModal]=useState(false)
 
@@ -71,9 +72,9 @@ const Navbar = () => {
        <label className="hidden md:block toggle-switch">
   <input 
   type="checkbox"
-  checked={user === "french"}
+  checked={user === "fr"}
   onChange={(e) =>
-    switchLanguage(e.target.checked ? "french" : "english")
+    switchLanguage(e.target.checked ? "fr" : "en")
   }
   />
   <div className="toggle-switch-background">
@@ -130,9 +131,9 @@ const Navbar = () => {
       <label className="block toggle-switch">
   <input 
   type="checkbox"
-  checked={user === "french"}
+  checked={user === "fr"}
   onChange={(e) =>
-    switchLanguage(e.target.checked ? "french" : "english")
+    switchLanguage(e.target.checked ? "fr" : "en")
   }
   />
   <div className="toggle-switch-background">
